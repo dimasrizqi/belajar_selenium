@@ -1,0 +1,55 @@
+from selenium import webdriver
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.wait import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.action_chains import ActionChains
+from selenium.webdriver.firefox.options import Options
+from selenium.webdriver.support.ui import Select
+from configparser import ConfigParser
+from pathlib import Path
+from selenium.webdriver.common.alert import Alert
+
+import MySQLdb
+import time
+import os
+import shutil
+from datetime import datetime, timedelta
+import pyautogui as gui
+
+
+
+import logging
+from datetime import datetime
+# Inisialisasi WebDriver
+options = Options()
+options.set_preference("browser.download.folderList", 2)
+options.set_preference("browser.download.manager.showWhenStarting", False)
+# options.set_preference("browser.download.dir", download_path)
+options.set_preference("browser.helperApps.neverAsk.saveToDisk", "application/x-gzip")
+options.add_argument("--width=1366")
+options.add_argument("--height=620")
+
+
+#webdriver variabel
+driver = webdriver.Firefox(options = options)
+# driver.maximize_window()     
+driver.get("https://www.google.com")
+
+# Cari kotak pencarian dan ketikkan kata kunci
+search_box = driver.find_element(By.NAME, "q")
+search_box.send_keys("Selenium Python" + Keys.RETURN)
+
+# Tunggu hasilnya
+try:
+    element = WebDriverWait(driver, 10).until(
+        EC.presence_of_element_located((By.ID, "result-stats"))
+    )
+    results = driver.find_elements(By.CSS_SELECTOR, "h3")
+    time.sleep(3)
+    for result in results:
+        print(result.text)
+finally:
+     driver.quit()
+
+
